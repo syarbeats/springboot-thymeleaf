@@ -2,28 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:th="http://www.thymeleaf.org"   
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
   <head>
- 
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Base</title>
-    <meta name="description" content=""/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+  		<link rel="stylesheet" href="css/bootstrap.min.css">
+	  	<script src="js/bootstrap.min.js"></script>
   </head>
   <body>
- 
-   		<div class="jumbotron text-center">
-		  <h1>SPRING RMS CASE STUDY</h1>
-		  <p>SIMPLE CRUD PROJECT USING SPRING FRAMEWORK </p> 
-	  	</div>
- 
-	    <div class="container">
-	      <nav aria-label="breadcrumb" role="navigation">
-	        <ol class="breadcrumb">
-	          <th:block layout:fragment="breadcrumb">
-	          </th:block>
-	        </ol>
-	      </nav>
-	      <div class="row" style="margin-top: 100px">
+   		<div th:fragment="menu">
+	            <div class="row" style="margin-top: 100px">
 	            	<div class="col-md-6">                	  
 	                		<button type="button" class="btn btn-secondary" onclick="location.href='http://localhost:8080/displayEmployee';">Show All Employee</button>              		               
 		                	<button type="button" class="btn btn-info" onclick="location.href='http://localhost:8080/updateEmployee';">Update Employee</button>	                               
@@ -34,17 +20,7 @@
 		                	<button type="button" class="btn btn-info" onclick="location.href='http://localhost:8080/editEmployee';">Edit Employee</button>	                	               
 		                	<button type="button" class="btn btn-secondary" onclick="location.href='http://localhost:8080/logout';">Logout</button>	                
 	                </div>	                	                	                
-	      </div>
-	      <div class="content">
-	        <div layout:fragment="page_content"></div>
-	      </div>
-	    </div>
-    <!-- /.container -->
- 
-    <script src = "js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <th:block layout:fragment="scripts">
-    </th:block>
+	            </div>
+	  	</div>
   </body>
- 
 </html>

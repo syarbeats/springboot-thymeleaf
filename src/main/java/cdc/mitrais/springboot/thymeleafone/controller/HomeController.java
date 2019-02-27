@@ -132,7 +132,7 @@ public class HomeController {
 	
 	@RequestMapping(value = EmployeeViewURI.VIEW_SHOW_EMPLOYE, method = RequestMethod.GET)
 	public ModelAndView  showEmployee() {
-		ModelAndView model = new ModelAndView("display-employee");
+		ModelAndView model = new ModelAndView("display-employees");
 		model.addObject("employeeList", this.getEmployeeService().getEmployeeListWithoutPaging());
 		return model;
 	}
