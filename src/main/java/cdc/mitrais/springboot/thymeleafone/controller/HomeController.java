@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,33 @@ public class HomeController {
 		return "index";
 	}
 	
-	@RequestMapping(value = "/home")
+	@RequestMapping(value = "/editEmployee")
+	public String editEmployee(@RequestParam(name="id") int id, Model model) {
+		
+		Employee employee = this.getEmployeeService().getEmployeeById(id);
+		model.addAttribute("employee", employee);
+		
+		return "edit-employee";
+	}
+	
+	@RequestMapping(value = EmployeeViewURI.VIEW_ADD_EMPLOYE, method = RequestMethod.POST)
+	public ModelAndView addEmployeeData(@ModelAttribute Employee employee) {
+		
+		logger.debug("Employee Name: "+employee.getName());
+		this.getEmployeeService().addEmployee(employee);
+		ModelAndView model = new ModelAndView("display-employees");
+		model.addObject("employeeList", this.getEmployeeService().getEmployeeListWithoutPaging());
+		return model;
+	
+	}
+	
+	@RequestMapping(value = EmployeeViewURI.VIEW_ADD_EMPLOYE, method = RequestMethod.GET)
+	public String addEmployeeForm(Model model) {
+		model.addAttribute("employee", new Employee());
+		return "add-employee";
+	}
+	
+	@RequestMapping(value = EmployeeViewURI.VIEW_HOME)
 	public String home(Model model, HttpSession session) {
 		
 		String username;
@@ -51,6 +78,7 @@ public class HomeController {
 		
 		model.addAttribute("message", "Gutten Morgen Brocks..");
 		model.addAttribute("username", username);
+		model.addAttribute("environment", "prod");
 		
 		if(username.equals("admin"))
 			model.addAttribute("isAdmin", true);

@@ -17,5 +17,7 @@
 	<div th:if="${isAdmin} == false">
 		Hello <p th:text="${username}"> Username</p>
 	</div>
+	
+	<p th:text="'Execution mode is ' + ((${environment} == 'prod')? 'Production' : 'Development')"/>
 </body>
 </html>
