@@ -2,12 +2,17 @@ package cdc.mitrais.springboot.thymeleafone.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +33,31 @@ public class HomeController {
 	@RequestMapping(value = "/index")
 	public String index() {
 		return "index";
+	}
+	
+	@RequestMapping(value = "/home")
+	public String home(Model model, HttpSession session) {
+		
+		String username;
+		
+		/*Get Current login credential*/
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails)principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		
+		model.addAttribute("message", "Gutten Morgen Brocks..");
+		model.addAttribute("username", username);
+		
+		if(username.equals("admin"))
+			model.addAttribute("isAdmin", true);
+		else
+			model.addAttribute("isAdmin", false);
+		
+		return "welcome";
 	}
 	
 	@RequestMapping(value = EmployeeRestURI.GET_ALL_EMPLOYEE, method = RequestMethod.GET)
