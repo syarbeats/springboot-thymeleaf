@@ -5,27 +5,15 @@
       <link href = "css/styles.css" rel = "stylesheet"/>
       <link rel="stylesheet" href="css/bootstrap.min.css">
 	  <script src="js/bootstrap.min.js"></script>
-      <title>Spring Boot Application</title>
+      <title>Welcome Broks</title>     
    </head>
    <body>
-      <div class="jumbotron text-center">
-		  <h1>SPRING RMS CASE STUDY</h1>
-		  <p>SIMPLE CRUD PROJECT USING SPRING FRAMEWORK </p> 
-	  </div>
-
-	  <div class="container">
-	            <div class="row" style="margin-top: 100px">
-	            	<div class="col-md-6">                	  
-	                		<button type="button" class="btn btn-secondary" onclick="location.href='http://localhost:8080/displayEmployee';">Show All Employee</button>              		               
-		                	<button type="button" class="btn btn-info" onclick="location.href='http://localhost:8080/updateEmployee';">Update Employee</button>	                               
-		                	<button type="button" class="btn btn-danger" onclick="location.href='http://localhost:8080/deleteEmployee';">Delete Employee</button>	                
-	                </div>
-	                <div class="col-md-6">                	
-	                		<button type="button" class="btn btn-dark" onclick="location.href='http://localhost:8080/addEmployee';">Insert Employee</button>	                	               
-		                	<button type="button" class="btn btn-info" onclick="location.href='http://localhost:8080/editEmployee';">Edit Employee</button>	                	               
-		                	<button type="button" class="btn btn-secondary" onclick="location.href='http://localhost:8080/logout';">Logout</button>	                
-	                </div>	                	                	                
-	            </div>
-	  </div>
+   		<div th:include="header :: header"></div>
+   		<div class="container">
+   			<div th:include="menu :: menu"></div>
+   			
+   			<div class="row" style="margin-top: 20px">			            
+	        </div>
+   		</div>  	
    </body>
 </html>
