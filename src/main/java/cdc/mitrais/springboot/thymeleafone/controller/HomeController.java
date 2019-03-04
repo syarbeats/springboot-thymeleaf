@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import cdc.mitrais.springboot.thymeleafone.config.EmployeeUserDetails;
 import cdc.mitrais.springboot.thymeleafone.model.Employee;
 import cdc.mitrais.springboot.thymeleafone.services.EmployeeServices;
 
@@ -36,6 +39,7 @@ public class HomeController {
 		return "index";
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/editEmployee")
 	public String editEmployee(@RequestParam(name="id") int id, Model model) {
 		
@@ -45,6 +49,7 @@ public class HomeController {
 		return "edit-employee";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = EmployeeViewURI.VIEW_ADD_EMPLOYE, method = RequestMethod.POST)
 	public ModelAndView addEmployeeData(@ModelAttribute Employee employee) {
 		
@@ -56,6 +61,7 @@ public class HomeController {
 	
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = EmployeeViewURI.VIEW_ADD_EMPLOYE, method = RequestMethod.GET)
 	public String addEmployeeForm(Model model) {
 		model.addAttribute("employee", new Employee());
@@ -65,16 +71,16 @@ public class HomeController {
 	@RequestMapping(value = EmployeeViewURI.VIEW_HOME)
 	public String home(Model model, HttpSession session) {
 		
-		String username;
+		String username = this.getCurrentUsername();
 		
 		/*Get Current login credential*/
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		/*Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		if (principal instanceof UserDetails) {
 			username = ((UserDetails)principal).getUsername();
 		} else {
 			username = principal.toString();
-		}
+		}*/
 		
 		model.addAttribute("message", "Gutten Morgen Brocks..");
 		model.addAttribute("username", username);
@@ -151,18 +157,21 @@ public class HomeController {
 		return new ResponseEntity(emp, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = EmployeeRestURI.UPDATE_EMPLOYEE, method = RequestMethod.POST)
 	public @ResponseBody Employee updateEmployee(@RequestBody Employee emp){
 		logger.info("Update Employee...");
 		return getEmployeeService().updateEmployeeSalary(emp);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = EmployeeRestURI.ADD_EMPLOYEE, method = RequestMethod.POST)
 	public @ResponseBody Employee addEmployee(@RequestBody Employee emp){
 		logger.info("Add New Employee...");
 		return getEmployeeService().addEmployee(emp);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = EmployeeRestURI.DELETE_EMPLOYEE, method = RequestMethod.DELETE)
 	public @ResponseBody String deleteEmployee(@PathVariable("id") int id){
 		logger.info("Delete Employee with Id: "+id);
@@ -179,6 +188,29 @@ public class HomeController {
 		return response;
 	}
 	
+	
+	@RequestMapping(value = EmployeeViewURI.VIEW_SHOW_EMPLOYE, method = RequestMethod.GET)
+	public ModelAndView  showEmployee() {
+		ModelAndView model = new ModelAndView("display-employees");
+		model.addObject("employeeList", this.getEmployeeService().getEmployeeListWithoutPaging());
+		return model;
+	}
+	
+	 
+	public String getCurrentUsername() {
+		 
+		 String username;
+		 Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 
+		 if (principal instanceof UserDetails) {
+		   username = ((UserDetails)principal).getUsername();
+		 } else {
+		   username = principal.toString();
+		 }
+		 
+		 return username;
+	 }
+	
 	public EmployeeServices getEmployeeService() {
 		return employeeService;
 	}
@@ -188,10 +220,4 @@ public class HomeController {
 		this.employeeService = employeeService;
 	}
 	
-	@RequestMapping(value = EmployeeViewURI.VIEW_SHOW_EMPLOYE, method = RequestMethod.GET)
-	public ModelAndView  showEmployee() {
-		ModelAndView model = new ModelAndView("display-employees");
-		model.addObject("employeeList", this.getEmployeeService().getEmployeeListWithoutPaging());
-		return model;
-	}
 }

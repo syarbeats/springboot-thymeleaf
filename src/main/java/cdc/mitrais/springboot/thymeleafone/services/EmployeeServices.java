@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,11 +49,13 @@ public class EmployeeServices {
 		return emp;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Transactional
 	public Employee addEmployee(Employee emp) {
 		return empRepo.save(emp);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@Transactional
 	public void deleteEmployee(Employee emp) {
 		 empRepo.delete(emp);

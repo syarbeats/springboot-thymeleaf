@@ -37,7 +37,7 @@
 						    <th>SALARY</th>
 						</tr>
 	            		<tr th:each="emp : ${employeeList}">
-						     <td th:text="${emp.id}">id</td>
+						     <td th:text="${emp.id}" th:href="@{http://localhost:8080/editEmployee(id=${emp.id})}"><a href="#">id</a></td>
 						     <td th:text="${emp.name}">name</td>
 						     <td th:text="${emp.salary}">salary</td>
 						</tr>
